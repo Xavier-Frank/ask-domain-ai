@@ -18,6 +18,9 @@ class TextCleaner:
     MULTIPLE_NEWLINES = re.compile(r"\n{2,}")
     PAGE_NUMBER_ONLY = re.compile(r"^\s*\d+\s*$", re.MULTILINE)
     DOT_LEADERS = re.compile(r"\.{4,}")
+    CONTROL_CHARACTERS = re.compile(r"[\x00-\x1F\x7F]")
+    NON_PRINTABLE = re.compile(r"[^\x20-\x7EÀ-ÿ\n]")
+    HYPHENATED_WORD = re.compile(r"(\w)-\s+(\w)")
 
     # Common bullet characters found in PDFs
     BULLET_CHARACTERS = [
@@ -35,6 +38,10 @@ class TextCleaner:
     ]
 
     @classmethod
+    def _remove_control_characters(cls, text: str) -> str:
+        return cls.CONTROL_CHARACTERS.sub(" ", text)
+
+    @classmethod
     def clean(cls, text: str) -> str:
         """
         Clean extracted PDF text.
@@ -43,6 +50,9 @@ class TextCleaner:
         if not text:
             return ""
 
+
+        text = cls._remove_control_characters(text)
+        text= cls._remove_non_printable(text)
         text = cls._normalize_unicode(text)
         text = cls._remove_table_of_contents(text)
         text = cls._remove_page_numbers(text)
@@ -51,6 +61,10 @@ class TextCleaner:
         text = cls._normalize_whitespace(text)
 
         return text.strip()
+
+    @classmethod
+    def _remove_non_printable(cls, text: str) -> str:
+        return cls.NON_PRINTABLE.sub(" ", text)
 
     @staticmethod
     def _normalize_unicode(text: str) -> str:
