@@ -1,1 +1,0 @@
-## This service is used to store/retrieve vectors

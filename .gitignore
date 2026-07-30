@@ -4,6 +4,8 @@ venv/
 .idea/misc.xml
 .idea/workspace.xml
 
+documents/
+
 #ignore compiled python files
 **/__pycache__/
 *.pyc

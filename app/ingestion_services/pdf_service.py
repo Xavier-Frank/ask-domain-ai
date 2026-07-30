@@ -3,6 +3,8 @@ from pathlib import Path
 
 import fitz
 
+from app.models.pdf_models import DocumentPage
+
 UPLOAD_FOLDER = Path("documents/uploads")
 
 class PdfService:
@@ -43,3 +45,22 @@ class PdfService:
         document.close()
 
         return text
+
+    @staticmethod
+    def extract_pages(path):
+        document = fitz.open(path)
+
+        pages = []
+
+        for page_number, page in enumerate(document):
+
+            pages.append(
+                DocumentPage(
+                    page_number=page_number + 1,
+                    text=page.get_text()
+                )
+            )
+
+        document.close()
+
+        return pages

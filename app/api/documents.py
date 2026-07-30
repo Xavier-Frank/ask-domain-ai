@@ -2,7 +2,9 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from starlette import status
 
-from app.services.pdf_service import PdfService
+from app.ingestion_services.chunk_service import ChunkService
+from app.ingestion_services.document_processor import DocumentProcessor
+from app.ingestion_services.pdf_service import PdfService
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -29,10 +31,12 @@ async def upload_document(file: UploadFile = File(...)):
         file_bytes
     )
 
-    text = PdfService.extract_text_from_pdf(saved_path)
+    document = DocumentProcessor.ingest(saved_path)
 
     return {
-        "filename": file.filename,
-        "characters": len(text),
-        "preview": text[:500]
+        "filename": document.filename,
+        "pages": document.page_count,
+        "chunks": len(document.chunks),
+        "characters": document.character_count,
+        "sample_chunk": document.chunks
     }
