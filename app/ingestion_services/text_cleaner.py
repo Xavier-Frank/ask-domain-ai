@@ -38,6 +38,10 @@ class TextCleaner:
     ]
 
     @classmethod
+    def _fix_hyphenated_words(cls, text: str) -> str:
+        return cls.HYPHENATED_WORD.sub(r"\1\2", text)
+
+    @classmethod
     def _remove_control_characters(cls, text: str) -> str:
         return cls.CONTROL_CHARACTERS.sub(" ", text)
 
@@ -51,8 +55,10 @@ class TextCleaner:
             return ""
 
 
+
         text = cls._remove_control_characters(text)
         text= cls._remove_non_printable(text)
+        text = cls._fix_hyphenated_words(text)
         text = cls._normalize_unicode(text)
         text = cls._remove_table_of_contents(text)
         text = cls._remove_page_numbers(text)
