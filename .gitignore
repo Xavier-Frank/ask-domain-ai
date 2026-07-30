@@ -1,0 +1,9 @@
+#Ignore virtual environments
+.venv
+venv/
+.idea/misc.xml
+.idea/workspace.xml
+
+#ignore compiled python files
+**/__pycache__/
+*.pyc

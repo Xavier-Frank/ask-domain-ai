@@ -1,0 +1,1 @@
+## once the pdfs are chunked, this service helps to generate embeddings (vectors)
