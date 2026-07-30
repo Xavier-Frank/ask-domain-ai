@@ -1,4 +1,5 @@
 from app.ingestion_services.sentence_service import SentenceService
+from app.ingestion_services.text_cleaner import TextCleaner
 from app.models.document_chunk import DocumentChunk
 from app.models.document_sentence import DocumentSentence
 from app.models.pdf_models import DocumentPage
@@ -44,9 +45,12 @@ class ChunkService:
         all_sentences: list[DocumentSentence] = []
 
         for page in pages:
+
+            cleaned_text = TextCleaner.clean(page.text)
+
             all_sentences.extend(
                 SentenceService.split(
-                    text=page.text,
+                    text=cleaned_text,
                     page_number=page.page_number
                 )
             )
