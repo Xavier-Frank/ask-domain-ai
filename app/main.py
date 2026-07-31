@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.api.documents import router as document_router
-from app.api.search import router as search_router
+from app.api.semantic_search import router as search_router
+from app.api.ai_search import router as ai_search
 from app.vector_store.chroma_service import ChromaService
 from app.vector_store.collection_service import CollectionService
 
@@ -12,6 +13,8 @@ app = FastAPI(
 
 app.include_router(document_router)
 app.include_router(search_router)
+
+app.include_router(ai_search)
 
 @app.get("/")
 def home():
