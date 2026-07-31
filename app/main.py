@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from app.api.documents import router as document_router
+from app.vector_store.chroma_service import ChromaService
+from app.vector_store.collection_service import CollectionService
 
 app = FastAPI(
     title="Ask Domain AI",
@@ -19,6 +21,22 @@ def home():
 
 @app.get("/health")
 def health():
+    client = ChromaService.get_client()
+    heartbeat = client.heartbeat()
     return {
         "status" : "up and running",
+        "chroma_db_heartbeat": heartbeat
+    }
+
+@app.get("/collections")
+def collections():
+
+    collection = CollectionService.get_collections()
+
+    result = collection.peek()
+
+    return {
+        "ids": result["ids"],
+        "documents": result["documents"],
+        "metadatas": result["metadatas"]
     }
