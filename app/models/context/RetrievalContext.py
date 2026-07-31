@@ -12,10 +12,10 @@ class RetrievalContext(BaseModel):
         description="Users original question"
     )
 
-    prompt: str = Field(
+    context: str = Field(
         description="Fully constructed prompt for the LLM"
     )
 
-    source: list[SearchResult] = Field(
+    sources: list[SearchResult] = Field(
         description="Source Chunks used to construct the prompt"
     )

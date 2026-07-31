@@ -71,4 +71,4 @@ class RerankService:
             reverse=True
         )
 
-        return results[:5]
+        return results[:2]
