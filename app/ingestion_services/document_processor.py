@@ -33,14 +33,13 @@ class DocumentProcessor:
         "Create document chunks"
         chunks = chunk_service.create_chunks(document_id, pages)
 
-        embedding_service = EmbeddingService()
 
         "Embed chunks into vector embeddings"
-        chunks = embedding_service.embed_chunks(chunks)
+        chunks = EmbeddingService.embed_chunks(chunks)
 
         duration = time.perf_counter() - start
 
-        "Create the new document"
+        "Create the new document metadata"
 
         document = Document(id=str(uuid.uuid4()), filename=path.name, path=str(path), uploaded_at=datetime.utcnow(),
                             page_count=len(pages), character_count=sum(len(page.text) for page in pages),

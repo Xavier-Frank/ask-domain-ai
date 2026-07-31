@@ -28,8 +28,9 @@ class EmbeddingService:
 
         return cls._model
 
+    @classmethod
     def embed_chunk(
-        self,
+        cls,
         chunk: DocumentChunk
     ) -> DocumentChunk:
         """
@@ -42,7 +43,7 @@ class EmbeddingService:
             Updated DocumentChunk containing the embedding.
         """
 
-        model = self._get_model()
+        model = cls._get_model()
 
         embedding = model.encode(
             chunk.text,
@@ -54,8 +55,9 @@ class EmbeddingService:
 
         return chunk
 
+    @classmethod
     def embed_chunks(
-        self,
+        cls,
         chunks: list[DocumentChunk]
     ) -> list[DocumentChunk]:
         """
@@ -70,7 +72,7 @@ class EmbeddingService:
         if not chunks:
             return []
 
-        model = self._get_model()
+        model = cls._get_model()
 
         texts = [
             chunk.text
@@ -90,8 +92,9 @@ class EmbeddingService:
 
         return chunks
 
+    @classmethod
     def embed_query(
-        self,
+        cls,
         query: str
     ) -> list[float]:
         """
@@ -104,7 +107,7 @@ class EmbeddingService:
             Query embedding as a list of floats.
         """
 
-        model = self._get_model()
+        model = cls._get_model()
 
         embedding = model.encode(
             query,
