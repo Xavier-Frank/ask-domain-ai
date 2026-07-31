@@ -4,7 +4,7 @@ from app.retrieval_services.search_service import SearchService
 class OllamaService:
 
     @classmethod
-    def search(cls, request):
+    def generate(cls, request):
 
         "Generate prompt"
         search_result = SearchService.search(request=request)

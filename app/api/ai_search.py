@@ -7,4 +7,4 @@ router = APIRouter(prefix="/search", tags=["Search"])
 
 @router.post("/ai-query", tags=["Search"])
 def search(request: SearchRequest):
-    return OllamaService.search(request)
+    return OllamaService.generate(request)
