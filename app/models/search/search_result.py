@@ -28,3 +28,8 @@ class SearchResult(BaseModel):
     filename: str = Field(
         description="Document filename"
     )
+
+    rerank_score: float | None = Field(
+        default=None,
+        description="CrossEncoder relevance score"
+    )

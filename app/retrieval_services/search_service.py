@@ -1,6 +1,7 @@
 from app.embedding_services.embedding_service import EmbeddingService
 from app.models.search.search_request import SearchRequest
 from app.models.search.search_result import SearchResult
+from app.retrieval_services.rerank_service import RerankService
 from app.vector_store.collection_service import CollectionService
 
 
@@ -54,5 +55,11 @@ class SearchService:
                 )
 
             )
+
+        search_results = RerankService.rerank(
+            question=request.question,
+            results=search_results,
+            top_k=request.top_k
+        )
 
         return search_results
