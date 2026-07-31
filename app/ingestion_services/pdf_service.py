@@ -3,7 +3,7 @@ from pathlib import Path
 
 import fitz
 
-from app.models.pdf_models import DocumentPage
+from app.models.ingestion.pdf_models import DocumentPage
 
 UPLOAD_FOLDER = Path("documents/uploads")
 

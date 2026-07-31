@@ -3,7 +3,8 @@ from datetime import datetime
 import time
 import uuid
 
-from app.models.document_models import Document
+from app.embedding_services.embedding_service import EmbeddingService
+from app.models.ingestion.document_models import Document
 from app.ingestion_services.chunk_service import ChunkService
 from app.ingestion_services.pdf_service import PdfService
 
@@ -28,6 +29,10 @@ class DocumentProcessor:
         )
 
         chunks = chunk_service.create_chunks(document_id, pages)
+
+        embedding_service = EmbeddingService()
+
+        chunks = embedding_service.embed_chunks(chunks)
 
         duration = time.perf_counter() - start
 

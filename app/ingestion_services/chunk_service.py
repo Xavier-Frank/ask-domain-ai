@@ -1,8 +1,8 @@
 from app.ingestion_services.sentence_service import SentenceService
 from app.ingestion_services.text_cleaner import TextCleaner
-from app.models.document_chunk import DocumentChunk
-from app.models.document_sentence import DocumentSentence
-from app.models.pdf_models import DocumentPage
+from app.models.ingestion.document_chunk import DocumentChunk
+from app.models.ingestion.document_sentence import DocumentSentence
+from app.models.ingestion.pdf_models import DocumentPage
 
 
 class ChunkService:

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from app.models.document_chunk import DocumentChunk
+from app.models.ingestion.document_chunk import DocumentChunk
 
 
 class Document(BaseModel):

@@ -1,6 +1,6 @@
 import re
 
-from app.models.document_sentence import DocumentSentence
+from app.models.ingestion.document_sentence import DocumentSentence
 
 
 class SentenceService:
