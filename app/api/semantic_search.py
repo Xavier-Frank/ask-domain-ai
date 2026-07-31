@@ -5,6 +5,6 @@ from app.retrieval_services.search_service import SearchService
 
 router = APIRouter(prefix="/search", tags=["Search"])
 
-@router.post("/user-query", tags=["Search"])
+@router.post("/generate-prompt", tags=["Search"])
 def search(request: SearchRequest):
     return SearchService.search(request)
