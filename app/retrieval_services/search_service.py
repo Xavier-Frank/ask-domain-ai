@@ -1,4 +1,6 @@
 from app.embedding_services.embedding_service import EmbeddingService
+from app.llm_services.context_builder import ContextBuilder
+from app.models.context import RetrievalContext
 from app.models.search.search_request import SearchRequest
 from app.models.search.search_result import SearchResult
 from app.retrieval_services.rerank_service import RerankService
@@ -13,7 +15,7 @@ class SearchService:
     @staticmethod
     def search(
         request: SearchRequest
-    ) -> list[SearchResult]:
+    ) -> RetrievalContext:
 
         collection = CollectionService.get_collections()
 
@@ -62,4 +64,9 @@ class SearchService:
             top_k=request.top_k
         )
 
-        return search_results
+        # return search_results
+        "Build the context for the LLM"
+        return ContextBuilder.build(
+            question=request.question,
+            search_results=search_results,
+        )
