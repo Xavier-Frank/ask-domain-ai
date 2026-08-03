@@ -1,405 +1,349 @@
-# Ask Domain AI
+Ask Domain AI Backend
+Overview
 
-## Overview
+Ask Domain AI is a Retrieval-Augmented Generation (RAG) backend built with FastAPI that enables users to ask natural language questions about domain-specific documents such as travel guides, policies, manuals, contracts, knowledge bases, and technical documentation.
 
-Ask Domain AI is a Retrieval-Augmented Generation (RAG) application that enables users to ask natural language questions about domain-specific documents such as brochures, policy documents, user manuals, contracts, travel guides, and knowledge base articles.
+Unlike traditional chatbots that rely solely on an LLM's general knowledge, Ask Domain AI grounds every response in uploaded documents. It extracts document content, transforms it into semantic embeddings, stores the vectors in ChromaDB, retrieves the most relevant information using semantic search, reranks the results for higher accuracy, constructs an optimized prompt, and generates grounded answers using a locally hosted Ollama Large Language Model.
 
-Instead of relying solely on a large language model's general knowledge, the application retrieves relevant information from uploaded documents and uses an AI model to generate accurate, context-aware responses grounded in the document content.
+The project is designed as a modular RAG framework where each stage of the pipeline is independently extensible.
 
-The project is being developed incrementally, beginning with a robust document ingestion pipeline before introducing embeddings, vector search, and Large Language Model (LLM) integration.
-
-The initial version focuses on PDF documents, with future support planned for additional document formats.
-
----
-
-# Features
-
-## Current
-
-### API
-
-* FastAPI backend
-* Interactive Swagger/OpenAPI documentation
-* Health check endpoint
-* Document upload endpoint
-
-### PDF Processing
-
-* PDF upload
-* Local document storage
-* PDF text extraction using PyMuPDF
-* Page-based document extraction
-* Document metadata generation
-
-### Text Processing
-
-* Unicode normalization
-* Control character removal
-* Non-printable character removal
-* Bullet removal
-* Dot leader removal
-* Standalone page number removal
-* Whitespace normalization
-* Hyphenated word repair
-
-### Sentence Processing
-
-* Sentence-aware parsing
-* Page-aware sentence tracking
-
-### Semantic Chunking
-
-* Sentence-aware chunk generation
-* Configurable chunk size
-* Configurable sentence overlap
-* Multi-page chunk support
-* Chunk metadata generation
-* Document processing pipeline
-
----
-
-## Planned
-
-* Automatic title extraction
-* Section heading detection
-* Chunk quality filtering
-* Embedding generation
-* Vector database integration
-* Semantic search
-* AI-powered question answering
-* Multi-document knowledge base
-* Conversation history
-* Source citations
-* Authentication and user management
-
----
-
-# High-Level Architecture
-
-```text
-                ┌────────────────────┐
-                │   PDF Document     │
-                └─────────┬──────────┘
-                          │
-                          ▼
-                Document Upload API
-                          │
-                          ▼
-                  Save PDF to Disk
-                          │
-                          ▼
-                  PDF Page Extraction
-                          │
-                          ▼
-                    Text Cleaning
-                          │
-                          ▼
+Features
+API
+FastAPI backend
+Interactive Swagger/OpenAPI documentation
+Health check endpoint
+Document upload endpoint
+Semantic search endpoint
+Streaming chat endpoint (SSE)
+Document Ingestion
+PDF upload
+Local document storage
+PDF text extraction using PyMuPDF
+Page-aware document parsing
+Metadata extraction
+Processing time tracking
+Text Processing
+Unicode normalization
+Removal of control characters
+Removal of non-printable characters
+Bullet cleanup
+Dot leader cleanup
+Page number removal
+Whitespace normalization
+Hyphenated word reconstruction
+Sentence Processing
+Sentence-aware parsing
+Page-aware sentence tracking
+Sentence metadata generation
+Semantic Chunking
+Sentence-aware chunk generation
+Configurable chunk size
+Configurable sentence overlap
+Multi-page chunk support
+Chunk metadata
+Character statistics
+Sentence statistics
+Embeddings
+Sentence Transformers integration
+all-MiniLM-L6-v2 embedding model
+Batch embedding generation
+Query embedding generation
+Normalized embeddings
+Vector Database
+ChromaDB integration
+Automatic collection creation
+Document indexing
+Vector persistence
+Similarity search
+Metadata filtering support
+Retrieval
+Semantic vector search
+Cross-Encoder reranking
+Context construction
+Prompt generation
+Source attribution
+AI
+Ollama integration
+Local LLM inference
+Streaming responses
+Server-Sent Events (SSE)
+Prompt token tracking
+Completion token tracking
+High-Level Architecture
+                     PDF Document
+                           │
+                           ▼
+                  Document Upload API
+                           │
+                           ▼
+                  Local Document Storage
+                           │
+                           ▼
+                 PDF Text Extraction
+                           │
+                           ▼
+                     Text Cleaning
+                           │
+                           ▼
                  Sentence Segmentation
-                          │
-                          ▼
-             Semantic Chunk Generation
-                          │
-                          ▼
-                  Document Processing
-                          │
-                          ▼
-               Embedding Generation
-                          │
-                          ▼
-                  Vector Database
-                          ▲
-                          │
-                Semantic Search
-                          ▲
-                          │
-                    User Question
-                          │
-                          ▼
-                 Prompt Construction
-                          │
-                          ▼
-               Large Language Model
-                          │
-                          ▼
-              Natural Language Response
-```
-
----
-
-# Technology Stack
-
-| Component         | Technology        |
-| ----------------- | ----------------- |
-| Language          | Python 3.12+      |
-| Framework         | FastAPI           |
-| API Server        | Uvicorn           |
-| Data Validation   | Pydantic          |
-| PDF Processing    | PyMuPDF           |
-| API Documentation | Swagger / OpenAPI |
-
-### Planned Technologies
-
-* Sentence Transformers
-* ChromaDB
-* OpenAI Embeddings
-* Ollama / OpenAI LLMs
-* React (Frontend)
-
----
-
-# Project Structure
-
-```text
+                           │
+                           ▼
+               Semantic Chunk Generation
+                           │
+                           ▼
+                 Embedding Generation
+                           │
+                           ▼
+                     ChromaDB
+                           ▲
+                           │
+                Semantic Similarity Search
+                           │
+                           ▼
+                 Cross-Encoder Reranker
+                           │
+                           ▼
+                  Context Builder
+                           │
+                           ▼
+                  Prompt Builder
+                           │
+                           ▼
+                     Ollama LLM
+                           │
+                           ▼
+              Streaming AI Response (SSE)
+Technology Stack
+Component	Technology
+Language	Python 3.12+
+Framework	FastAPI
+Validation	Pydantic
+API Server	Uvicorn
+PDF Processing	PyMuPDF
+Embeddings	Sentence Transformers
+Embedding Model	all-MiniLM-L6-v2
+Reranker	ms-marco-MiniLM-L-6-v2
+Vector Database	ChromaDB
+LLM	Ollama
+Default Model	Qwen2.5 7B
+HTTP Client	HTTPX
+Streaming	Server-Sent Events (SSE)
+Project Structure
 ask-domain-ai/
+
+app/
 │
-├── app/
-│   ├── api/
-│   │
-│   ├── ingestion_services/
-│   │   ├── chunk_service.py
-│   │   ├── pdf_service.py
-│   │   ├── sentence_service.py
-│   │   └── text_cleaner.py
-│   │
-│   ├── models/
-│   │   ├── document.py
-│   │   ├── document_chunk.py
-│   │   ├── document_page.py
-│   │   ├── document_sentence.py
-│   │   └── ...
-│   │
-│   ├── processors/
-│   │   └── document_processor.py
-│   │
-│   ├── config.py
-│   └── main.py
+├── api/
 │
-├── documents/
-│   └── uploads/
+├── configs/
 │
-├── requirements.txt
-├── README.md
-└── .venv/
-```
+├── embedding_services/
+│   └── embedding_service.py
+│
+├── ingestion_services/
+│   ├── pdf_service.py
+│   ├── sentence_service.py
+│   ├── chunk_service.py
+│   └── text_cleaner.py
+│
+├── llm_services/
+│   ├── context_builder.py
+│   ├── prompt_builder_service.py
+│   └── ollama_service.py
+│
+├── retrieval_services/
+│   ├── search_service.py
+│   └── rerank_service.py
+│
+├── vector_store/
+│   ├── collection_service.py
+│   └── vector_store_service.py
+│
+├── models/
+│
+├── processors/
+│
+└── main.py
 
----
+documents/
+└── uploads/
 
-# Getting Started
-
-## Clone the repository
-
-```bash
+README.md
+requirements.txt
+Getting Started
+Clone
 git clone <repository-url>
+
 cd ask-domain-ai
-```
-
-## Create a virtual environment
-
-```bash
+Create Virtual Environment
 python -m venv .venv
-```
 
-## Activate the virtual environment
+Windows
 
-### Windows
-
-```bash
 .venv\Scripts\activate
-```
 
-### Linux / macOS
+Linux/macOS
 
-```bash
 source .venv/bin/activate
-```
-
-## Install dependencies
-
-```bash
+Install Dependencies
 pip install -r requirements.txt
-```
+Start ChromaDB
+chroma run
+Start Ollama
+ollama serve
 
-## Start the application
+Run your preferred model:
 
-```bash
+ollama run qwen2.5:7b
+Start FastAPI
 uvicorn app.main:app --reload
-```
+API Documentation
 
-The application will be available at:
+Swagger
 
-```text
-http://localhost:8000
-```
-
----
-
-# API Documentation
-
-Once the application is running, the interactive API documentation can be accessed at:
-
-### Swagger UI
-
-```text
 http://localhost:8000/docs
-```
 
-### ReDoc
+ReDoc
 
-```text
 http://localhost:8000/redoc
-```
+Current Processing Pipeline
 
----
+Every uploaded document passes through the following stages:
 
-# Available Endpoints
+Upload PDF
+Save document locally
+Extract page text
+Clean text
+Parse sentences
+Generate semantic chunks
+Generate embeddings
+Store vectors in ChromaDB
+Receive user question
+Embed question
+Semantic similarity search
+Cross-Encoder reranking
+Build retrieval context
+Construct LLM prompt
+Generate answer using Ollama
+Stream answer to the client with source citations
+Available Endpoints
+Method	Endpoint	Description
+GET	/	API information
+GET	/health	Health check
+POST	/documents/upload	Upload and index document
+POST	/chat	AI question answering
+POST	/chat/stream	Streaming AI responses
+Development Roadmap
+Phase 1 — API Foundation ✅
+ FastAPI setup
+ Swagger
+ Health endpoint
+ PDF upload
+Phase 2 — Document Processing ✅
+ PDF extraction
+ Text cleaning
+ Sentence segmentation
+ Semantic chunking
+ Multi-page chunks
+Phase 3 — Semantic Search ✅
+ Sentence Transformer embeddings
+ Batch embedding generation
+ ChromaDB integration
+ Vector indexing
+ Semantic similarity search
+Phase 4 — Retrieval Enhancement ✅
+ Cross-Encoder reranking
+ Context builder
+ Prompt builder
+ Source attribution
+Phase 5 — AI Generation ✅
+ Ollama integration
+ Local LLM inference
+ Streaming responses (SSE)
+ Token usage tracking
+ Prompt generation
+Phase 6 — Frontend (In Progress)
+ Next.js chatbot
+ Floating AI assistant
+ Streaming UI
+ Markdown rendering
+ Source citation cards
+Phase 7 — Future Enhancements
+ Automatic document title extraction
+ Section heading extraction
+ OCR support
+ Microsoft Word support
+ PowerPoint support
+ Multi-document collections
+ Conversation history
+ Authentication
+ Docker deployment
+ Kubernetes deployment
+ CI/CD pipeline
+Example RAG Workflow
+Upload PDF
+      │
+      ▼
+Extract Text
+      │
+      ▼
+Clean Text
+      │
+      ▼
+Sentence Segmentation
+      │
+      ▼
+Semantic Chunking
+      │
+      ▼
+Embedding Generation
+      │
+      ▼
+ChromaDB Index
+      │
+────────────────────────────────────────────
+      │
+User Question
+      │
+      ▼
+Question Embedding
+      │
+      ▼
+Similarity Search
+      │
+      ▼
+Cross-Encoder Reranking
+      │
+      ▼
+Context Builder
+      │
+      ▼
+Prompt Builder
+      │
+      ▼
+Ollama
+      │
+      ▼
+Streaming Answer
+Future Vision
 
-| Method | Endpoint            | Description                       |
-| ------ | ------------------- | --------------------------------- |
-| GET    | `/`                 | Application information           |
-| GET    | `/health`           | Health check                      |
-| POST   | `/documents/upload` | Upload and process a PDF document |
+The long-term vision for Ask Domain AI is to evolve into a complete enterprise knowledge assistant capable of:
 
----
+Supporting multiple document formats (PDF, Word, PowerPoint, HTML)
+Managing multiple knowledge bases
+Integrating hybrid keyword and semantic retrieval
+Performing OCR on scanned documents
+Providing multilingual document search
+Delivering conversational memory
+Offering authentication and role-based access
+Exposing analytics and document usage insights
+Deploying as a scalable cloud-native RAG platform
+License
 
-# Current Processing Pipeline
+This project is intended for educational, research, and demonstration purposes. A production deployment should include authentication, authorization, monitoring, secret management, observability, and scalable infrastructure.
 
-Each uploaded document passes through the following pipeline:
+Author
 
-1. Upload PDF document.
-2. Save the document locally.
-3. Extract text from every page.
-4. Clean extracted text.
-5. Split text into sentences.
-6. Generate overlapping semantic chunks.
-7. Build a complete document model.
-8. Return processed document metadata.
+Xavier Oduor
 
----
-
-# Semantic Chunking Strategy
-
-Ask Domain AI uses a sentence-aware chunking strategy designed for Retrieval-Augmented Generation.
-
-Features include:
-
-* Sentence boundaries are preserved.
-* Chunks are generated using a configurable maximum size.
-* Consecutive chunks overlap by configurable sentences to preserve context.
-* Chunks may span multiple pages.
-* Each chunk stores:
-
-  * Document ID
-  * Chunk ID
-  * Start page
-  * End page
-  * Character count
-  * Sentence count
-  * Placeholder for embeddings
-
-This provides significantly better retrieval quality than naive fixed-length chunking.
-
----
-
-# Development Roadmap
-
-## Phase 1 — API Foundation ✅
-
-* [x] FastAPI project setup
-* [x] Swagger documentation
-* [x] Health endpoint
-* [x] PDF upload
-* [x] Local document storage
-
----
-
-## Phase 2 — Document Ingestion ✅
-
-* [x] PDF page extraction
-* [x] Text cleaning
-* [x] Sentence segmentation
-* [x] Sentence-aware chunking
-* [x] Multi-page chunk support
-* [x] Document processing pipeline
-
----
-
-## Phase 3 — Knowledge Base (In Progress)
-
-* [ ] Document title extraction
-* [ ] Section heading detection
-* [ ] Chunk quality filtering
-* [ ] Metadata enrichment
-
----
-
-## Phase 4 — Semantic Search
-
-* [ ] Generate embeddings
-* [ ] Store embeddings in ChromaDB
-* [ ] Similarity search
-
----
-
-## Phase 5 — AI Chat
-
-* [ ] Chat endpoint
-* [ ] Prompt engineering
-* [ ] Retrieval-Augmented Generation (RAG)
-* [ ] Natural language response generation
-
----
-
-## Phase 6 — Production Features
-
-* [ ] Authentication
-* [ ] Multiple knowledge bases
-* [ ] Conversation history
-* [ ] Source citations
-* [ ] Docker support
-* [ ] CI/CD pipeline
-
----
-
-# Example Workflow
-
-1. Upload a domain-specific PDF document.
-2. Extract and clean the document text.
-3. Split the text into meaningful sentences.
-4. Build overlapping semantic chunks.
-5. Generate embeddings for each chunk.
-6. Store embeddings in a vector database.
-7. Receive a user's question.
-8. Retrieve the most relevant chunks.
-9. Send the retrieved context to the language model.
-10. Return a grounded natural language answer.
-
----
-
-# Future Enhancements
-
-Potential improvements include:
-
-* Automatic title extraction
-* Section heading detection
-* OCR fallback for scanned PDFs
-* Support for Microsoft Word, PowerPoint, and text documents
-* Website crawling
-* Hybrid keyword and semantic search
-* Multi-language document support
-* Administrative dashboard
-* Analytics and usage metrics
-* Feedback collection for answer quality
-
----
-
-# License
-
-This project is intended for educational and demonstration purposes. A production deployment should include proper security, authentication, monitoring, secret management, and scalable infrastructure.
-
----
-
-# Author
-
-**Xavier Oduor**
-
-Ask Domain AI was created as a hands-on learning project to explore Retrieval-Augmented Generation (RAG), semantic search, document processing, vector databases, and Large Language Model integration. The project emphasizes building each component from first principles to gain a deep understanding of modern AI-powered knowledge systems.
+Ask Domain AI is a hands-on engineering project built to explore the complete Retrieval-Augmented Generation (RAG) lifecycle—from document ingestion and semantic indexing to vector retrieval, reranking, prompt engineering, and local Large Language Model integration using Ollama. The project emphasizes understanding and implementing every layer of a modern AI-powered knowledge system from first principles.
