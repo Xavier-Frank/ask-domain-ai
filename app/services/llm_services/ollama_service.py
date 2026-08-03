@@ -63,76 +63,111 @@ class OllamaService:
 
     @classmethod
     def generate_stream(
-        cls,
-        request: PromptRequest,
+            cls,
+            request: PromptRequest,
     ):
         """
-        Stream tokens from Ollama as Server-Sent Events.
+        Stream tokens from Ollama using Server-Sent Events.
         """
 
-        with httpx.stream(
-            "POST",
-            f"{OLLAMA_URL}/api/generate",
-            json={
-                "model": OLLAMA_MODEL,
-                "prompt": request.prompt,
-                "stream": True,
-            },
-            timeout=OLLAMA_TIMEOUT,
-        ) as response:
+        try:
 
-            response.raise_for_status()
+            with httpx.stream(
+                    "POST",
+                    f"{OLLAMA_URL}/api/generate",
+                    json={
+                        "model": OLLAMA_MODEL,
+                        "prompt": request.prompt,
+                        "stream": True,
+                    },
+                    timeout=OLLAMA_TIMEOUT,
+            ) as response:
 
-            for line in response.iter_lines():
+                response.raise_for_status()
 
-                if not line:
-                    continue
+                # -----------------------------
+                # Start Event
+                # -----------------------------
 
-                body = json.loads(line)
+                yield cls._sse(
+                    {
+                        "type": "start",
+                        "model": OLLAMA_MODEL,
+                        "question": request.question,
+                    }
+                )
 
-                # --------------------------------------------------
-                # Stream generated token
-                # --------------------------------------------------
+                for line in response.iter_lines():
 
-                if body.get("response"):
+                    if not line:
+                        continue
 
-                    yield cls._sse(
-                        {
-                            "type": "token",
-                            "content": body["response"],
-                        }
-                    )
+                    body = json.loads(line)
 
-                # --------------------------------------------------
-                # Generation complete
-                # --------------------------------------------------
+                    # -----------------------------
+                    # Token Event
+                    # -----------------------------
 
-                if body.get("done"):
+                    token = body.get("response")
 
-                    yield cls._sse(
-                        {
-                            "type": "sources",
-                            "sources": [
-                                source.model_dump()
-                                for source in cls._build_sources(request)
-                            ],
-                        }
-                    )
+                    if token:
+                        yield cls._sse(
+                            {
+                                "type": "token",
+                                "content": token,
+                            }
+                        )
 
-                    yield cls._sse(
-                        {
-                            "type": "usage",
-                            "model": body.get("model"),
-                            "prompt_tokens": body.get("prompt_eval_count"),
-                            "completion_tokens": body.get("eval_count"),
-                        }
-                    )
+                    # -----------------------------
+                    # Finished Generation
+                    # -----------------------------
 
-                    yield cls._sse(
-                        {
-                            "type": "done",
-                        }
-                    )
+                    if body.get("done"):
+                        yield cls._sse(
+                            {
+                                "type": "sources",
+                                "sources": [
+                                    source.model_dump()
+                                    for source in cls._build_sources(request)
+                                ],
+                            }
+                        )
+
+                        yield cls._sse(
+                            {
+                                "type": "usage",
+                                "model": body.get("model"),
+                                "prompt_tokens": body.get("prompt_eval_count"),
+                                "completion_tokens": body.get("eval_count"),
+                                "total_duration": body.get("total_duration"),
+                                "load_duration": body.get("load_duration"),
+                                "eval_duration": body.get("eval_duration"),
+                            }
+                        )
+
+                        yield cls._sse(
+                            {
+                                "type": "complete",
+                            }
+                        )
+
+        except httpx.HTTPError as ex:
+
+            yield cls._sse(
+                {
+                    "type": "error",
+                    "message": str(ex),
+                }
+            )
+
+        except Exception as ex:
+
+            yield cls._sse(
+                {
+                    "type": "error",
+                    "message": str(ex),
+                }
+            )
 
     @staticmethod
     def _build_sources(
