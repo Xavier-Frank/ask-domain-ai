@@ -20,7 +20,7 @@ def search(request: SearchRequest):
 
     return answer
 
-@router.post("/chat/stream")
+@router.post("/chat/stream", tags=["Search"])
 def stream_chat(request: SearchRequest):
 
     prompt = SearchService.search(request)
