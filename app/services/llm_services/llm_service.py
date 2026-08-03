@@ -14,3 +14,7 @@ class LLMService:
             prompt: PromptRequest
     ) -> LLMResponse:
         return OllamaService.generate(prompt)
+
+    @classmethod
+    def generate_stream(cls, prompt):
+        return OllamaService.generate_stream(prompt)

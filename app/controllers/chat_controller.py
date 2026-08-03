@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from starlette.responses import StreamingResponse
 
 from app.models.search.search_request import SearchRequest
 from app.services.llm_services.llm_service import LLMService
@@ -18,3 +19,18 @@ def search(request: SearchRequest):
     answer = LLMService.generate(prompt_req)
 
     return answer
+
+@router.post("/chat/stream")
+def stream_chat(request: SearchRequest):
+
+    prompt = SearchService.search(request)
+
+    return StreamingResponse(
+        LLMService.generate_stream(prompt),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
