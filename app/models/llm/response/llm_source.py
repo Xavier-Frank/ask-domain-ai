@@ -5,3 +5,4 @@ class LLMSource(BaseModel):
     filename: str | None = None
     start_page: int = None
     end_page: int = None
+    chunk_id: int | None = None

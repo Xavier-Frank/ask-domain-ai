@@ -57,6 +57,7 @@ class OllamaService:
                 filename=result.filename,
                 start_page=result.start_page,
                 end_page=result.end_page,
+                chunk_id=result.chunk_id,
             )
             for result in request.sources
         ]
