@@ -5,7 +5,11 @@ import fitz
 
 from app.models.ingestion.pdf_models import DocumentPage
 
-UPLOAD_FOLDER = Path("documents/uploads")
+from app.configs.config import (
+    UPLOAD_DIR
+)
+
+UPLOAD_FOLDER = UPLOAD_DIR
 
 class PdfService:
 

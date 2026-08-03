@@ -1,11 +1,11 @@
-from app.embedding_services.embedding_service import EmbeddingService
-from app.llm_services.context_builder import ContextBuilder
-from app.llm_services.prompt_builder_service import PromptBuilderService
+from app.services.embedding_services.embedding_service import EmbeddingService
+from app.services.llm_services.context_builder import ContextBuilder
+from app.services.llm_services.prompt_builder_service import PromptBuilderService
 from app.models.context.RetrievalContext import RetrievalContext
 from app.models.prompt.prompt_request import PromptRequest
 from app.models.search.search_request import SearchRequest
 from app.models.search.search_result import SearchResult
-from app.retrieval_services.rerank_service import RerankService
+from app.services.retrieval_services.rerank_service import RerankService
 from app.vector_store.collection_service import CollectionService
 
 

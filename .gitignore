@@ -8,6 +8,7 @@ venv/
 .idea/dataSources/
 
 documents/
+app.documents/
 
 #ignore compiled python files
 **/__pycache__/

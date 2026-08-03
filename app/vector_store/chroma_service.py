@@ -1,6 +1,6 @@
 import chromadb
 
-from app.config import CHROMA_DB_DIR
+from app.configs.config import CHROMA_DB_DIR
 
 
 class ChromaService:

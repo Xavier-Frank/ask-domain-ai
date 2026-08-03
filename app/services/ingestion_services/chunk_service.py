@@ -1,5 +1,5 @@
-from app.ingestion_services.sentence_service import SentenceService
-from app.ingestion_services.text_cleaner import TextCleaner
+from app.services.ingestion_services.sentence_service import SentenceService
+from app.services.ingestion_services.text_cleaner import TextCleaner
 from app.models.ingestion.document_chunk import DocumentChunk
 from app.models.ingestion.document_sentence import DocumentSentence
 from app.models.ingestion.pdf_models import DocumentPage

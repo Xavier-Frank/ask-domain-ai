@@ -2,9 +2,8 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from starlette import status
 
-from app.ingestion_services.chunk_service import ChunkService
-from app.ingestion_services.document_processor import DocumentProcessor
-from app.ingestion_services.pdf_service import PdfService
+from app.services.ingestion_services.document_processor import DocumentProcessor
+from app.services.ingestion_services.pdf_service import PdfService
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 

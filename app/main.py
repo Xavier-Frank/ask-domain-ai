@@ -1,7 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI
-from app.api.documents import router as document_router
-from app.api.semantic_search import router as search_router
-from app.api.ai_search import router as ai_search
+from app.controllers.documents_controller import router as document_router
+from app.controllers.chat_controller import router as search_router
 from app.vector_store.chroma_service import ChromaService
 from app.vector_store.collection_service import CollectionService
 
@@ -13,15 +14,16 @@ app = FastAPI(
 
 app.include_router(document_router)
 app.include_router(search_router)
-
-app.include_router(ai_search)
-
 @app.get("/")
 def home():
+    dir_curr = Path(__file__).resolve().parent.parent
+    doc = dir_curr / "app/documents"
     return {
         "application" : "Ask Domain AI",
         "version" : "1.0",
         "status" : "up & running",
+        "Base Url" : dir_curr,
+        "Docs" : doc
     }
 
 @app.get("/health")
