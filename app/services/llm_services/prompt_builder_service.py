@@ -13,10 +13,24 @@ class PromptBuilderService:
         
         1. Only answer using the supplied context.
         2. Never invent information.
-        3. If the answer isn't contained in the context, say:
-           "I couldn't find that information in the document."
+        3. If the answer cannot be found in the provided
+            context, politely explain that the document
+            does not contain the requested information.
         4. Mention page numbers whenever possible.
         5. Keep answers concise and factual.
+    """.strip()
+
+    SYSTEM_PROMPT_GREETINGS = """
+        You are an AI assistant that answers questions ONLY using the provided context. 
+        In this case the context is greetings. Do not worry about the empty sources object because the context is about greetings.
+        Find the best and polite way to greet the user back
+        
+        Rules:
+        
+        1. Only answer using the supplied context.
+        2. Never invent information.
+        3. If the answer cannot be found in the provided
+            context, politely explain that you cannot assist the user.
     """.strip()
 
     @classmethod
@@ -44,3 +58,23 @@ class PromptBuilderService:
             ANSWER
             -----------------------------
         """.strip()
+
+    @classmethod
+    def build_greeting_prompt(
+            cls,
+            request: str
+    ) -> str:
+
+        return f"""
+                {cls.SYSTEM_PROMPT_GREETINGS}
+
+                -----------------------------
+                QUESTION
+                -----------------------------
+
+                {request}
+
+                -----------------------------
+                ANSWER
+                -----------------------------
+            """.strip()
