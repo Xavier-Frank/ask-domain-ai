@@ -80,7 +80,7 @@ class OllamaService:
                         "prompt": request.prompt,
                         "stream": True,
                     },
-                    timeout=OLLAMA_TIMEOUT,
+                    timeout=None,
             ) as response:
 
                 response.raise_for_status()
@@ -103,6 +103,8 @@ class OllamaService:
                         continue
 
                     body = json.loads(line)
+
+                    print("body:", body)
 
                     # -----------------------------
                     # Token Event
@@ -148,8 +150,10 @@ class OllamaService:
                         yield cls._sse(
                             {
                                 "type": "complete",
+                                "success": True,
                             }
                         )
+                        return
 
         except httpx.HTTPError as ex:
 

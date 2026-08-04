@@ -1,6 +1,8 @@
 from pathlib import Path
 
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+
 from app.controllers.documents_controller import router as document_router
 from app.controllers.chat_controller import router as search_router
 from app.vector_store.chroma_service import ChromaService
@@ -11,6 +13,19 @@ app = FastAPI(
     description="Domain Specific AI Assistant",
     version="1.0",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
+
 
 app.include_router(document_router)
 app.include_router(search_router)

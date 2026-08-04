@@ -9,6 +9,7 @@ venv/
 
 documents/
 app.documents/
+img**
 
 #ignore compiled python files
 **/__pycache__/
