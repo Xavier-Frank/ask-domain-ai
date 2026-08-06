@@ -1,5 +1,3 @@
-from asyncio import log
-
 from fastapi import APIRouter
 from starlette.responses import StreamingResponse
 

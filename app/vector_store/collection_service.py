@@ -14,21 +14,20 @@ class CollectionService:
 
     COLLECTION_NAME = "ask-domain-ai"
 
+    _collection: Collection | None = None
+
     @classmethod
     def get_collections(cls) -> Collection:
-        """
-            Retrieves app collections. Created automatically if it doesn't exist
-            :return: a collection
-        """
+        if cls._collection is None:
+            client = ChromaService.get_client()
+            cls._collection = client.get_or_create_collection(
+                name=cls.COLLECTION_NAME,
+                metadata={
+                    "description": "Knowledge base for Ask Domain AI"
+                }
+            )
 
-        client = ChromaService.get_client()
-
-        return client.get_or_create_collection(
-            name = cls.COLLECTION_NAME,
-            metadata = {
-                "description" : "Knowledge base for Ask Domain AI"
-            }
-        )
+        return cls._collection
 
     @classmethod
     def delete_collection(cls):

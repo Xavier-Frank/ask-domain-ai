@@ -1,10 +1,10 @@
-from pathlib import Path
-from datetime import datetime
 import time
 import uuid
+from datetime import datetime
+from pathlib import Path
 
-from app.services.embedding_services.embedding_service import EmbeddingService
 from app.models.ingestion.document_models import Document
+from app.services.embedding_services.embedding_service import EmbeddingService
 from app.services.ingestion_services.chunk_service import ChunkService
 from app.services.ingestion_services.pdf_service import PdfService
 from app.vector_store.vector_store_service import VectorStoreService

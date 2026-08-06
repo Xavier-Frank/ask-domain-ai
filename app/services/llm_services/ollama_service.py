@@ -69,6 +69,7 @@ class OllamaService:
         """
         Stream tokens from Ollama using Server-Sent Events.
         """
+        print("Prompt size: ", len(request.prompt))
 
         try:
 
