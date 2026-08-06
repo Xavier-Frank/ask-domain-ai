@@ -1,93 +1,182 @@
-Ask Domain AI Backend
+# Ask Domain AI Backend
+
 ## Overview
-Ask Domain AI is a modular Retrieval-Augmented Generation (RAG) backend built with FastAPI. It ingests PDF documents, indexes them into ChromaDB, retrieves relevant content using semantic search, reranks results, builds optimized prompts, and generates grounded answers with Ollama.
+
+Ask Domain AI is a modular Retrieval-Augmented Generation (RAG) backend built with FastAPI. It ingests PDF documents into a knowledge base, performs semantic retrieval with ChromaDB, reranks results for relevance, constructs optimized prompts, and streams grounded responses from Ollama using Server-Sent Events (SSE).
+
+---
 
 ## Features
+
 ### API
 - FastAPI
-- Swagger/OpenAPI
-- PDF upload
-- Semantic search
+- Swagger / OpenAPI
+- PDF upload & indexing
+- Semantic document search
 - Streaming chat (SSE)
+- Health check endpoint
 
-### Processing
+### RAG Pipeline
 - PDF extraction (PyMuPDF)
-- Text cleaning
+- Text cleaning & normalization
 - Sentence-aware chunking
-- Embeddings (all-MiniLM-L6-v2)
-- ChromaDB indexing
+- Embedding generation
+- ChromaDB vector storage
+- Semantic retrieval
 - Cross-Encoder reranking
-- Context & Prompt builders
-- Ollama integration
+- Context construction
+- Prompt generation
+- Ollama (Qwen2.5) integration
+- Streaming token generation
+
+### Performance
+- Lazy-loaded AI models
+- Model warm-up during application startup
+- Cached embedding & reranking models
+- Streaming responses with low first-token latency
+
+---
+
 ## Architecture
+
 ```text
-PDF Upload
-    │
-    ▼
-Text Extraction
-    │
-    ▼
-Cleaning
-    │
-    ▼
-Sentence Chunking
-    │
-    ▼
-Embeddings
-    │
-    ▼
-ChromaDB
-    │
-    ▼
-Semantic Search
-    │
-    ▼
-Reranker
-    │
-    ▼
-Context Builder
-    │
-    ▼
-Prompt Builder
-    │
-    ▼
-Ollama
-    │
-    ▼
-Streaming Response (SSE)
+                PDF Upload
+                     │
+                     ▼
+            PDF Text Extraction
+                     │
+                     ▼
+          Text Cleaning & Normalization
+                     │
+                     ▼
+          Sentence-aware Chunking
+                     │
+                     ▼
+          Embedding Generation
+                     │
+                     ▼
+             ChromaDB Indexing
+                     │
+                     ▼
+──────────────────────────────────────────
+
+              User Question
+                     │
+                     ▼
+          Query Embedding
+                     │
+                     ▼
+          Semantic Retrieval
+                     │
+                     ▼
+          Cross-Encoder Reranking
+                     │
+                     ▼
+            Context Builder
+                     │
+                     ▼
+            Prompt Builder
+                     │
+                     ▼
+           Ollama (Qwen2.5)
+                     │
+                     ▼
+        Streaming Response (SSE)
 ```
+
+---
+
 ## Tech Stack
+
 | Component | Technology |
-|---|---|
-| Python | 3.12+ |
+|-----------|------------|
+| Language | Python 3.12+ |
 | Framework | FastAPI |
-| Vector DB | ChromaDB |
-| Embeddings | Sentence Transformers |
+| Vector Database | ChromaDB |
+| PDF Processing | PyMuPDF |
+| Embeddings | all-MiniLM-L6-v2 |
+| Reranker | CrossEncoder (Sentence Transformers) |
 | LLM | Ollama (Qwen2.5:7B) |
-| Streaming | SSE |
+| Streaming | Server-Sent Events (SSE) |
+
+---
+
 ## Getting Started
+
 ```bash
+# Create virtual environment
 python -m venv .venv
+
+# Install dependencies
 pip install -r requirements.txt
 
+# Start ChromaDB
 chroma run
-ollama serve
-ollama run qwen2.5:7b
 
+# Start Ollama
+ollama serve
+
+# Download the model
+ollama pull qwen2.5:7b
+
+# Run the API
 uvicorn app.main:app --reload
 ```
-## Endpoints
-| Method | Endpoint |
-|---|---|
-| GET | /health |
-| POST | /documents/upload |
-| POST | /chat |
-| POST | /chat/stream |
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/health` | Health check |
+| POST | `/api/v1/documents/upload` | Upload and index PDF documents |
+| POST | `/api/v1/chat` | Generate a complete response |
+| POST | `/api/v1/chat/stream` | Stream AI responses via SSE |
+
+---
+
+## Request Flow
+
+```text
+User
+   │
+   ▼
+FastAPI
+   │
+   ▼
+Search Service
+   │
+   ├── Query Embedding
+   ├── ChromaDB Retrieval
+   ├── Cross-Encoder Reranking
+   └── Prompt Builder
+   │
+   ▼
+Ollama
+   │
+   ▼
+Server-Sent Events
+   │
+   ▼
+Frontend
+```
+
+---
+
 ## Roadmap
-- ✅ API Foundation
-- ✅ Document Processing
-- ✅ Semantic Search
-- ✅ Retrieval Pipeline
-- ✅ Ollama Integration
-- 🚧 Next.js Frontend
-- ⏳ Enterprise Features
+
+- ✅ PDF ingestion
+- ✅ Text preprocessing
+- ✅ Semantic search
+- ✅ Cross-Encoder reranking
+- ✅ Prompt engineering
+- ✅ ChromaDB integration
+- ✅ Ollama integration
+- ✅ Streaming chat (SSE)
+- ✅ Model warm-up
+- ✅ Next.js frontend
+- ⏳ Conversation history
+- ⏳ Multi-document collections
+- ⏳ Hybrid search (Keyword + Vector)
+- ⏳ Authentication & user management
