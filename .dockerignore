@@ -1,0 +1,17 @@
+.venv
+.idea
+.vscode
+
+__pycache__/
+*.pyc
+
+.env
+
+.git
+.gitignore
+
+chroma
+
+*.db
+
+node_modules

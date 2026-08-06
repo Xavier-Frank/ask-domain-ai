@@ -1,0 +1,28 @@
+services:
+
+  ask-domain-ai:
+
+    build: .
+
+    container_name: ask-domain-ai
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - .:/app
+
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma
+
+  ollama:
+
+    image: ollama/ollama
+
+    ports:
+      - "11434:11434"
+
+    volumes:
+      - ollama:/root/.ollama
